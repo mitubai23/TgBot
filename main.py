@@ -1,7 +1,6 @@
 import asyncio
-from aiogram import Bot, Dispatcher
-from os import getenv
-from dotenv import load_dotenv
+from aiogram import Bot
+from config import bot, dp, database
 from handlers.pic import pic_router
 from handlers.echo import echo_router
 from handlers.start import start_router
@@ -10,9 +9,8 @@ from handlers.menu import menu_router
 from handlers.survey import survey_router
 import logging
 
-load_dotenv()
-bot = Bot(token=getenv("TOKEN"))
-dp = Dispatcher()
+async def on_startup(bot: Bot) -> None:
+    await database.create_tables()
 
 async def main():
     dp.include_router(pic_router)
@@ -22,6 +20,7 @@ async def main():
     dp.include_router(survey_router)
     # echo всегда в конце
     dp.include_router(echo_router)
+    dp.startup.register(on_startup)
     # запуск бота
     await dp.start_polling(bot)
 
