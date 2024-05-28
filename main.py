@@ -1,45 +1,25 @@
 import asyncio
-from aiogram import Bot, Dispatcher, types
-from aiogram.filters import Command
-import logging
-import random
+from aiogram import Bot, Dispatcher
+from os import getenv
 from dotenv import load_dotenv
-from os import getenv, listdir, path
+from handlers.pic import pic_router
+from handlers.echo import echo_router
+from handlers.start import start_router
+from handlers.info import info_router
+from handlers.menu import menu_router
+import logging
 
 load_dotenv()
 bot = Bot(token=getenv("TOKEN"))
 dp = Dispatcher()
 
-
-@dp.message(Command("start"))
-async def start(message: types.Message):
-    await message.answer(f"Привет, {message.from_user.first_name}")
-
-
-@dp.message(Command('myinfo'))
-async def myinfo(message: types.Message):
-    await message.answer(f"Ваше имя: {message.from_user.first_name}\n"
-                          f"Ваша username: {message.from_user.username}\n"
-                          f"Ваш id: {message.from_user.id}")
-
-
-@dp.message(Command("pic"))
-async def pic(message: types.Message):
-    image_directory = 'images'
-    file_name = random.choice(listdir(image_directory))
-    file_path = path.join(image_directory, file_name)
-    logging.info(file_path)
-    file = types.FSInputFile(file_path)
-    await message.answer_photo(file)
-
-
-@dp.message()
-async def echo(message: types.Message):
-    await message.answer(message.text)
-
-
 async def main():
-
+    dp.include_router(pic_router)
+    dp.include_router(start_router)
+    dp.include_router(info_router)
+    dp.include_router(menu_router)
+    # echo всегда в конце
+    dp.include_router(echo_router)
     # запуск бота
     await dp.start_polling(bot)
 
