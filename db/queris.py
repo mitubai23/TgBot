@@ -30,7 +30,7 @@ class Queries:
     """
     POPULATE_CATEGORIES = """
         INSERT INTO categories (name) VALUES
-            ('Пиццы'),
+            ('Пицца'),
             ('Супы'),
             ('Роллы')
     """

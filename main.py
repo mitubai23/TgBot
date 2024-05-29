@@ -7,6 +7,7 @@ from handlers.start import start_router
 from handlers.info import info_router
 from handlers.menu import menu_router
 from handlers.survey import survey_router
+from handlers.crawler import crawler_router
 import logging
 
 async def on_startup(bot: Bot) -> None:
@@ -18,6 +19,7 @@ async def main():
     dp.include_router(info_router)
     dp.include_router(menu_router)
     dp.include_router(survey_router)
+    dp.include_router(crawler_router)
     # echo всегда в конце
     dp.include_router(echo_router)
     dp.startup.register(on_startup)
